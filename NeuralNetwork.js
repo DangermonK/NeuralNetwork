@@ -112,8 +112,8 @@ class NeuralNetwork {
 
 	load(network) {
 		this.layers = [];
+		this.inputs = network[0].nodes[0].inputs.length;
 		for(const x in network) {
-			console.log(x);
 			this.addLayer(network.length);
 			this.layers[x].load(network[x]);
 		}
