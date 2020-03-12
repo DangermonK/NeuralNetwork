@@ -72,8 +72,8 @@ class Layer {
 			out_error.push(this.nodes[x].backpropagate(errors[x], lr));
 		}
 
-		const avg_error = Array(out_error[0].length).fill(0);
-		const length = out_error.length;
+		const avg_error = Array(this.nodes[0].weights.length).fill(0);
+		const length = this.nodes.length;
 		for(const x in out_error) {
 			for(const y in out_error[x]) {
 				avg_error[y] += out_error[x][y];
@@ -83,6 +83,7 @@ class Layer {
 		for(const i in avg_error) {
 			avg_error[i] = avg_error[i] / length;
 		}
+
 		return avg_error;
 	}
 
@@ -126,4 +127,3 @@ class NeuralNetwork {
 	}
 
 }
-
