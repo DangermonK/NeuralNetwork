@@ -12,6 +12,11 @@ class Neuron {
 		this.inputs = [];		
 	}
 
+	load(node) {
+		this.weights = node.weights;
+		this.bias = node.bias;
+	}
+
 	activation(x) {
 		return (1 / (1 + Math.pow(Math.E, -x)));
 	}
@@ -52,9 +57,18 @@ class Neuron {
 class Layer {
 
 	constructor(nodes, inputs) {
+		this.inputs = inputs;
 		this.nodes = [];
 		for(let i = 0; i < nodes; i++) {
 			this.nodes.push(new Neuron(inputs));
+		}
+	}
+
+	load(layer) {
+		this.nodes = [];
+		for(const x in layer.nodes) {
+			this.nodes.push(new Neuron(this.inputs));
+			this.nodes[x].load(layer.nodes[x]);
 		}
 	}
 
@@ -94,6 +108,15 @@ class NeuralNetwork {
 	constructor(inputs) {
 		this.layers = [];
 		this.inputs = inputs;
+	}
+
+	load(network) {
+		this.layers = [];
+		for(const x in network) {
+			console.log(x);
+			this.addLayer(network.length);
+			this.layers[x].load(network[x]);
+		}
 	}
 
 	addLayer(nodes) {
