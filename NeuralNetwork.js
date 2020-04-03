@@ -17,6 +17,15 @@ class Neuron {
 		this.bias = node.bias;
 	}
 
+	loadRandomized(nodes) {
+		for(const i in this.weights) {
+			const index = Math.floor(Math.random() * nodes.length);
+			this.weights[i] = nodes[index].weights[i]
+		}
+        const index = Math.floor(Math.random() * nodes.length);
+		this.bias = nodes[index].bias;
+    }
+
 	activation(x) {
 		return (1 / (1 + Math.pow(Math.E, -x)));
 	}
@@ -72,6 +81,19 @@ class Layer {
 		}
 	}
 
+	loadRandomized(layers) {
+		this.nodes = [];
+		for(const x in layers[0].nodes) {
+			this.nodes.push(new Neuron(this.inputs));
+			const neurons = [];
+			for(const l of layers) {
+				neurons.push(l.nodes[x]);
+			}
+			this.nodes[x].loadRandomized(neurons);
+		}
+
+	}
+
 	feed(input) {
 		const output = [];
 		for(const node of this.nodes) {
@@ -112,10 +134,21 @@ class NeuralNetwork {
 
 	load(network) {
 		this.layers = [];
-		this.inputs = network[0].nodes[0].inputs.length;
-		for(const x in network) {
-			this.addLayer(network.length);
-			this.layers[x].load(network[x]);
+		for(const x in network.layers) {
+			this.addLayer(network.layers[x].nodes.length);
+			this.layers[x].load(network.layers[x]);
+		}
+	}
+
+	loadRandomized(networks) {
+		this.layers = [];
+		for(const x in networks[0].layers) {
+			this.addLayer(networks[0].layers[x].nodes.length);
+			const l = [];
+			for(const n of networks) {
+				l.push(n.layers[x]);
+			}
+			this.layers[x].loadRandomized(l);
 		}
 	}
 
