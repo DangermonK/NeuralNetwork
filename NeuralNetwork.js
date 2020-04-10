@@ -2,13 +2,11 @@
 class Neuron {
 
 	constructor(inputs) {
-
 		this.weights = [];
 		this.bias = Math.random();
 		for(let i = 0; i < inputs; i++) {
-			this.weights.push(Math.random());
+			this.weights.push(Math.random() * 2 - 1);
 		}
-
 		this.inputs = [];		
 	}
 
@@ -20,14 +18,14 @@ class Neuron {
 	loadRandomized(nodes) {
 		for(const i in this.weights) {
 			const index = Math.floor(Math.random() * nodes.length);
-			this.weights[i] = nodes[index].weights[i]
+			this.weights[i] = nodes[index].weights[i] + (Math.random() * 2 - 1) * 0.1;
 		}
         const index = Math.floor(Math.random() * nodes.length);
-		this.bias = nodes[index].bias;
+		this.bias = nodes[index].bias + (Math.random() * 2 - 1) * 0.1;
     }
 
 	activation(x) {
-		return (1 / (1 + Math.pow(Math.E, -x)));
+		return (1 / (1 + Math.pow(Math.E, -x))) * 2 - 1;
 	}
 
 	feed(input) {
