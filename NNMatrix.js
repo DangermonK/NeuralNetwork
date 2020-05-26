@@ -11,6 +11,14 @@ class Matrix {
 
 	}
 
+	randomize(factor) {
+		for(let row = 0; row < this.rows; row++) {
+			for(let col = 0; col < this.cols; col++) {
+				this.set(row, col, this.get(row, col) + (Math.random() * 2 - 1) * factor);
+			}	
+		}	
+	}
+
 	fillRandom(range = 1, offset = 0) {
 		for(let row = 0; row < this.rows; row++) {
 			for(let col = 0; col < this.cols; col++) {
@@ -112,6 +120,12 @@ class Matrix {
 			return matrix;
 		}
 	}
+
+	static load(matrix) {
+		const m = new Matrix(matrix.rows, matrix.cols);
+		m.matrix = matrix.matrix;
+		return m;
+	}
 }
 
 class Layer {
@@ -131,6 +145,29 @@ class Layer {
 			this.layer = new Layer(nextInput, layerMatrix, max, min);
 		}
 
+	}
+
+	load(layer) {
+
+		this.weights = Matrix.load(layer.weights);
+		this.biases = Matrix.load(layer.biases);
+
+		this.range = layer.range;
+		this.offset = layer.offset;
+
+		if(layer.layer !== null) {
+			this.layer = new Layer(this.weights.rows, this.weights.cols);
+			this.layer.load(layer.layer);
+		}
+
+	}
+
+	randomizeWeightOffset(factor) {
+		this.weights.randomize(factor);
+		this.biases.randomize(factor);
+		if(this.layer !== null) {
+			this.layer.randomizeLayer(factor);
+		}
 	}
 
 	initializeRandom() {
@@ -210,3 +247,4 @@ class Layer {
 	}
 
 }
+
